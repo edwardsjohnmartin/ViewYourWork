@@ -5,6 +5,18 @@
   text-align: center;
 }
 
+select.disabled ::-ms-expand {
+  display: none;
+}
+
+select.disabled  {
+  /* for Firefox */
+  -moz-appearance: none;
+  /* for Chrome */
+  -webkit-appearance: none;
+}
+
+
 .logo {
   height: 6em;
   padding: 1.5em;

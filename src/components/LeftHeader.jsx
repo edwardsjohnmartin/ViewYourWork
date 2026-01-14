@@ -4,19 +4,12 @@ export default function LeftHeader({subjectList, subject, onSubjectChange, assig
     return (
         <div className="flex flex-row mb-6 place-content-start">
             <div className="flex flex-col max-w-96 mr-6">
-                <label className="inline-block mb-2 text-md font-medium text-gray-900 text-left" htmlFor='file-selector'>
+                {/* <label className="inline-block mb-2 text-md font-medium text-gray-900 dark:text-gray-200 text-left" htmlFor='file-selector'>
                     Keystroke Upload:
-                </label>
+                </label> */}
                 <input id="file-selector" type="file" accept=".csv, .ps2, .log" onChange={handleFileChange}
-                className="block text-sm text-gray-400 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-2 file:py-2 file:px-2 file:border-0 file:text-sm file:font-semibold"/>
+                className="block text-sm text-gray-400 dark:text-gray-200 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 focus:outline-none file:mr-2 file:py-2 file:px-2 file:border-0 file:text-sm file:font-semibold"/>
             
-                <div className="mt-6">
-                    <Slider
-                        value={playback}
-                        onValueChange={onPlaybackChange}
-                        maxLength={maxPlayback -1}
-                    />
-                </div>
 
                 {/* <div class="mt-4 relative z-0">
                 <input value.bind="searchString & debounce:850" type="text" id="findString"
@@ -28,12 +21,10 @@ export default function LeftHeader({subjectList, subject, onSubjectChange, assig
                     <p else> Search String </p>
                 </label>
                 </div> */}
-            </div>
-            <div className="relative space-y-4 w-64">
                 <Dropdown
                     options={subjectList}
                     onChange={onSubjectChange}
-                    label={'Subject'}
+                    label={'Student'}
                     chosen={subject}
                 />
                 <Dropdown
@@ -47,20 +38,34 @@ export default function LeftHeader({subjectList, subject, onSubjectChange, assig
                     onChange={onTaskChange}
                     label={'File'}
                     chosen={task}
+                    // disabled={true}
                 />
+
+                <div className="mt-6">
+                    <Slider
+                        value={playback}
+                        onValueChange={onPlaybackChange}
+                        maxLength={maxPlayback -1}
+                    />
+                </div>
+
             </div>
+            {/* <div className="relative space-y-4 w-64">
+                
+            </div> */}
         </div>
     )
 }
 
-function Dropdown({options, chosen, onChange, label}) {
+function Dropdown({options, chosen, onChange, label, disabled=false}) {
     return (
-        <div className="flex flex-row place-content-between">
-            <label htmlFor={label} className="inline-block mb-2 text-md font-medium text-gray-900"> {label}: </label>
+        <div className="flex flex-row mt-6 place-content-between">
+            <label htmlFor={label} className="inline-block mb-2 text-md font-medium text-gray-900 dark:text-gray-200"> {label}: </label>
             <select
-                className="self-end inline-block bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-40 p-1"
+                className={`self-end inline-block bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-500 text-gray-900 dark:text-gray-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-40 p-1 ${disabled ? "disabled" : ""}`}
                 onChange={e => onChange(e.target.value)}
                 value={chosen}
+                disabled={disabled}
             >
                 <OptionList
                     options={options}

@@ -165,7 +165,7 @@ export default function SimpleData() {
             edits.current.push(new Edit(location, insertText, deleteText));
             
         });
-        console.log(`Parsed states in ${Date.now()-startTime} ms`)
+        // console.log(`Parsed states in ${Date.now()-startTime} ms`)
     }
 
 
@@ -202,7 +202,7 @@ export default function SimpleData() {
 
 
         subjectIds.forEach(subjectId => cachedSubjects.current[subjectId] = {});
-        console.log(cachedSubjects.current)
+        // console.log(cachedSubjects.current)
     }
 
     const cacheAssignmentIds = (assignments) => {
@@ -269,25 +269,33 @@ export default function SimpleData() {
     }
     
     useEffect(() => {
-            console.log(`${playback} : ${replayIdx}`)
+            // console.log(`${playback} : ${replayIdx}`)
             if (playback != replayIdx) { 
-                console.log("clearing")
+                // console.log("clearing")
                 clearTimeout(timeoutID);
             }
-            console.log(play)
         
     
             if (!play) return
     
             if (playback < selectionDf.count() - 1) {
+                const { lineNumber, column } = editorRef.current.getModel().getPositionAt(edits.current[playback].location);
+                const nextLineNumber = editorRef.current.getModel().getPositionAt(edits.current[playback+1].location-1)["lineNumber"];
+
+                
                 let delay = selectionDf.at(playback+1).ClientTimestamp - selectionDf.at(playback).ClientTimestamp;
                 delay = delay/10;
-                if (delay < 1000/60) {
-                  delay = 1000/60;
-                } else if (delay > 4000) {
-                  delay = 4000;
+                if (lineNumber != nextLineNumber && Math.abs(lineNumber - nextLineNumber) > 5) {
+                    delay = 1000
+                } else if  (lineNumber != nextLineNumber) {
+                    delay = 1000/3
                 }
-                console.log(delay);
+                else if (delay < 1000/18) {
+                  delay = 1000/18;
+                } else if (delay > 2000) {
+                  delay = 2000;
+                }
+                // console.log(delay);
                 setTimeoutID(setTimeout(() => { tick() }, delay));
             }
         }, [playback])
@@ -324,7 +332,7 @@ export default function SimpleData() {
             onKeyDown={e => handleKeyPress(e)}
             tabIndex={0}
         >  
-            <div className="flex flex-col pl-8 pt-8 pb-8 h-full md:block w-[40vw] 3xl:max-w-[700px]">
+            <div className="flex flex-col pl-8 pt-8 pb-8 h-full md:block w-[30vw] 3xl:max-w-[700px]">
                 <LeftHeader
                     subjectList={subjectList}
                     subject={subject}
@@ -349,6 +357,7 @@ export default function SimpleData() {
                 <Code
                     codeStates={codeStates}
                     playback={playback}
+                    setPlayback={setPlayback}
                     task={task}
                     edits={edits}
                     hoverHighlights={hoverHighlights}

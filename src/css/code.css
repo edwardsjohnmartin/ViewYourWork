@@ -2,12 +2,20 @@
     background-color: rgb(241, 127, 228);
 }
 
-.hightlightRow {
+.highlightRow {
     background-color: rgb(155, 237, 164);
+}
+
+.highlightRowDark {
+    background-color: rgba(165, 120, 188, 0.5);
 }
 
 .insert {
     background-color: rgb(50, 221, 70);
+}
+
+.insertDark {
+    background-color: rgba(89, 30, 173, 0.886);
 }
 
 .delete {
