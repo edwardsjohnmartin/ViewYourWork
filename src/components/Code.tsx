@@ -11,6 +11,7 @@ export default function Code({codeStates, playback, setPlayback, task, edits, ho
     const [lastState, setLastState] = useState(null);
     const monaco = useMonaco();
 
+    
     // const editorRef = useRef(null);
 
     function handleEditorDidMount(editor, monaco) {
@@ -76,6 +77,8 @@ export default function Code({codeStates, playback, setPlayback, task, edits, ho
         setCurrentCodeState(codeStates[playback])
     }
     }, [codeStates, playback])
+
+    
 
     useEffect(() => {
         if (edits && editorRef.current != null) {
@@ -161,7 +164,7 @@ export default function Code({codeStates, playback, setPlayback, task, edits, ho
         }
     }, [currentCodeState])
 
-    // useEffect(() => {
+    
         
     function hasTwoOccurrences(str, substring) {
         let firstIndex = str.indexOf(substring);
@@ -223,6 +226,36 @@ export default function Code({codeStates, playback, setPlayback, task, edits, ho
     
     //     return () => disposable.dispose();
     //   }, [monaco]);
+    
+    
+    const languagesDict = {
+        "py":"python",
+        "java":"java",
+        "js":"javascript",
+        "ts":"typescript",
+        "css":"css",
+        "json":"json",
+        "html":"html"
+    };
+
+    useEffect(()=> {
+        if (!monaco || !editorRef.current) {
+            return;
+        }
+        const editor = editorRef.current;
+        const model = editor.getModel();
+        if (!model) {
+            return;
+        }
+        var detectedLanguage = undefined;
+        if (task.includes(".")) {
+            const fileExtension = task.split(".").at(-1);
+            detectedLanguage = languagesDict[fileExtension]
+        } else {
+            detectedLanguage = undefined
+        }
+        monaco.editor.setModelLanguage(model, detectedLanguage)
+    }, [task])
 
     var options = {
         automaticLayout: true,
@@ -236,7 +269,8 @@ export default function Code({codeStates, playback, setPlayback, task, edits, ho
             <div className="h-full w-full">
                 <MonacoEditor
                     height={height}
-                    defaultLanguage='python'
+                    defaultLanguage={undefined}
+                    // defaultLanguage={detectedLanguage}                    
                     // value={""}
                     value={currentCodeState}
                     options={options}
